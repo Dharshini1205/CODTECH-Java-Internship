@@ -1,0 +1,48 @@
+import java.io.*;
+
+public class FileHandlingDemo {
+
+    public static void main(String[] args) {
+        // Allow optional filename as first argument; default to sample.txt
+        String fileName = (args != null && args.length > 0 && args[0] != null && !args[0].isEmpty())
+                ? args[0]
+                : "sample.txt";
+
+        // Contract / behavior:
+        // - Input: optional filename (string)
+        // - Output: creates/updates the file and prints its contents
+        // - Error modes: prints concise messages when IO fails
+
+        // -------- WRITE TO FILE (overwrite) --------
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(fileName))) {
+            bw.write("Hello CODTECH Internship");
+            bw.newLine();
+            bw.write("This file is created using Java File Handling.");
+            System.out.println("File written successfully: " + fileName);
+        } catch (IOException e) {
+            System.err.println("Failed to write file '" + fileName + "': " + e.getMessage());
+        }
+
+        // -------- READ FILE --------
+        System.out.println("\nReading file content from: " + fileName);
+        try (BufferedReader br = new BufferedReader(new FileReader(fileName))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                System.out.println(line);
+            }
+        } catch (FileNotFoundException e) {
+            System.err.println("File not found: " + fileName);
+        } catch (IOException e) {
+            System.err.println("Error reading file '" + fileName + "': " + e.getMessage());
+        }
+
+        // -------- MODIFY FILE (APPEND) --------
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(fileName, true))) {
+            bw.newLine();
+            bw.write("File modified by appending new content.");
+            System.out.println("\nFile modified (appended) successfully: " + fileName);
+        } catch (IOException e) {
+            System.err.println("Failed to append to file '" + fileName + "': " + e.getMessage());
+        }
+    }
+}
